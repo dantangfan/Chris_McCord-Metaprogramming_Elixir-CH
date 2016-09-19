@@ -2,7 +2,10 @@
 
 本书，我们将从源头开始探索 elixir 元编程。学习过程中，除了提高编程技能之外，我们还将探索 elixir 元编程系统的潜力。学完之后，你将会从根本上了解 elixir 的方方面面，并能写出那些让更少的代码做更多事情的令人振奋的代码库。
 
-[第一节](sestion1.md)
-[第二节](sestion2.md)
-[第三节](sestion3.md)
-[第四节](sestion4.md)
+- [第一节](sestion1.md)
+
+- [第二节](sestion2.md)
+
+- [第三节](sestion3.md)
+
+- [第四节](sestion4.md)
