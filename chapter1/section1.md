@@ -90,3 +90,66 @@ Provides an `if/2` macro.
 
 
 ### 简单总结一下
+
+前面我们知道了，Elixir 很多语法都是宏，同时也知道了可以用 quote 操作来返回代码的 AST 树形式以供程序交互。需要记住的一个要点是：宏接收 AST 树作为参数，同时返回值也是 AST 树。写宏代码实际上就是生成一堆 AST 树！
+
+下面我们举个例子来看看这个黑魔法：试用宏编程来让一个简单的数学表达式看起来更加口语化（其实就是打印一堆log，确实不好翻译，看代码就懂了）。在其他语言里面，我们一般只能通过在运行时判断操作符来决定该输出什么，但这里我们可以在编译时就决定输出什么。
+
+首先，我们看看作为参数输入到我们宏代码的 AST 树长啥样：
+
+
+```
+iex(5)> quote do: 5 + 2
+{:+, [context: Elixir, import: Kernel], [5, 2]}
+iex(6)> quote do: 1 * 2 + 3
+{:+, [context: Elixir, import: Kernel],
+ [{:*, [context: Elixir, import: Kernel], [1, 2]}, 3]}
+```
+
+我们可以看到，AST 树实际上的表示形式就是 `{操作符，[看起来像是上下文相关环境]， [左操作数，右操作数]}` 。下面我们就来见识下怎么操作 AST 树。下面这个例子，我们将会实现一个包含 say 宏 Math 模块，say 宏会将输入的算术用自然语言表达出来，并输出计算值：
+
+
+```
+defmodule Math do
+
+  # {:+, [context: Elixir, import: Kernel], [5, 2]}
+  defmacro say({:+, _, [lhs, rhs]}) do
+    quote do
+      lhs = unquote(lhs)
+      rhs = unquote(rhs)
+      result = lhs + rhs
+      IO.puts "#{lhs} plus #{rhs} is #{result}"
+      result
+    end
+  end
+
+  # {:*, [context: Elixir, import: Kernel], [8, 3]}
+  defmacro say({:*, _, [lhs, rhs]}) do
+    quote do
+      lhs = unquote(lhs)
+      rhs = unquote(rhs)
+      result = lhs * rhs
+      IO.puts "#{lhs} times #{rhs} is #{result}"
+      result
+    end
+  end
+end
+```
+
+下面，我们来加载这个模块尝试一下：
+
+
+```
+iex> c "math.exs"
+[Math]
+iex> require Math
+nil
+iex> Math.say 5 + 2
+5 plus 2 is 7
+7
+iex> Math.say 18 * 4
+18 times 4 is 72
+72
+```
+
+简单分析下：前面我们知道宏接收的参数是 AST 树，这里我们通过模式匹配可以知道 + 和 * 需要哪个 say 宏，然后使用 unquote 获取了左右操作数（注意，unqoute 和 quote 并不是逆操作，后面会讲到），最后我们的宏返回的也是一个 AST 树。至于执行流程是怎样的，马上我们就会讲。
