@@ -46,7 +46,7 @@ iex(2)> quote do: div(10, 2)
 既然我们都能操作 AST 树了，那我们就能在编译器做点有趣的事情了。比如 Elixir 标准库中的 Logging 模块，可以通过删除某些表达式来优化 logging 操作，如下示例：
 
 
-```
+```elixir
 def write(path, contents) do
   Logger.debug "Writing contents to file #{path}"
   File.write!(path, contents)
@@ -64,7 +64,7 @@ end
 可能你觉得你在书写 Elixir 代码时基本没有用到过宏，但事实却非如此，比如下面代码：
 
 
-```
+```elixir
 defmodule Notifier do
   def ping(pid) do
     if Process.alive?(pid) do
@@ -78,7 +78,7 @@ end
 这么一段不起眼的代码，里面就包含了四个宏： defmodule, def, if, Logger.debug 。不信你可以自己去看帮助文档
 
 
-```
+```bash
 iex(3)> h if
 * defmacro if(condition, clauses)
 
@@ -98,7 +98,7 @@ Provides an `if/2` macro.
 首先，我们看看作为参数输入到我们宏代码的 AST 树长啥样：
 
 
-```
+```bash
 iex(5)> quote do: 5 + 2
 {:+, [context: Elixir, import: Kernel], [5, 2]}
 iex(6)> quote do: 1 * 2 + 3
@@ -109,7 +109,7 @@ iex(6)> quote do: 1 * 2 + 3
 我们可以看到，AST 树实际上的表示形式就是 `{操作符，[看起来像是上下文相关环境]， [左操作数，右操作数]}` 。下面我们就来见识下怎么操作 AST 树。下面这个例子，我们将会实现一个包含 say 宏 Math 模块，say 宏会将输入的算术用自然语言表达出来，并输出计算值：
 
 
-```
+```elixir
 defmodule Math do
 
   # {:+, [context: Elixir, import: Kernel], [5, 2]}
@@ -139,7 +139,7 @@ end
 下面，我们来加载这个模块尝试一下：
 
 
-```
+```bash
 iex> c "math.exs"
 [Math]
 iex> require Math
