@@ -4,8 +4,14 @@
 
 代码生成代码可能听起来比较滑稽，但你很快就能见识到 Elixir 是如何利用自身特性轻松实现这个功能。下面，我们将从基础讲起，一步一步的学习 Elixir 宏编程。
 
-- []()
-- []()
-- []()
-- []()
-- []()
+- [The World Is Your Playground](section1.md)
+
+- [宏的规则](section2.md)
+
+- [AST树揭秘](section3.md)
+
+- [宏：Elixir 的砖瓦](section3.md)
+
+- [代码注入和调用者上下文](section4.md)
+
+- [探索更多](section5.md)

@@ -1,4 +1,3 @@
-TODO 在最初就应该解释编译时的执行顺序，比如为什么要用 import unquote(__MODULE__)
 ## 编译时处理
 
 Elixir 允许我们使用一个特殊的模块变量 @before_compile ，这个变量可以用来告诉编译器，在编译结束前还需要执行什么操作。@before_compile 接收一个模块名作为参数，并且还必须定义一个 __before_compile__ 宏。这个宏就会在编译完成前(生成目标代码前)的最后一步被调用，看看代码比如我们继续修改前面的 assertion 代码。
